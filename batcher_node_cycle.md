@@ -25,8 +25,8 @@ batcher的行为主要由DA类型和batch类型决定。
 1. [`DataAvailabilitySource`](https://github.com/ethereum-optimism/optimism/blob/5cdcfd46f0f309e9901dafd8f4c47357c8320c34/op-node/rollup/derive/l1_retrieval.go#L14)扫描L1区块中的batcher tx并解析出`frame`字节。
 2. `FrameQueue`将`frame`字节[解析](https://github.com/ethereum-optimism/optimism/blob/4656d49ac32e7cfecb3fb29e79e39f641defa198/op-node/rollup/derive/frame_queue.go#L42)成`frame`。
 3. `ChannelBank`将`frame`[组装](https://github.com/ethereum-optimism/optimism/blob/4656d49ac32e7cfecb3fb29e79e39f641defa198/op-node/rollup/derive/channel_bank.go#L197)成`channel`。
-4. `ChannelInReader`将`channel`[解析](https://github.com/ethereum-optimism/optimism/blob/4656d49ac32e7cfecb3fb29e79e39f641defa198/op-node/rollup/derive/channel_in_reader.go#L73)成多个`Batch`。
-5. `BatchQueue`将`Batch`和L2 safe head对齐。
+4. `ChannelInReader`将`channel`[解析](https://github.com/ethereum-optimism/optimism/blob/4656d49ac32e7cfecb3fb29e79e39f641defa198/op-node/rollup/derive/channel_in_reader.go#L73)成多个`Batch`(`SingularBatch`或者`SpanBatch`)。
+5. `BatchQueue`将`Batch`和L2 safe head对齐，并且如果`Batch`是`SpanBatch`的话，会[拆](https://github.com/ethereum-optimism/optimism/blob/6cf35daa3bcf760f1b3927514e438caf087bfc17/op-node/rollup/derive/batch_queue.go#L199)成`SingularBatch`返回给上层。
    1. 如果`Batch`[落后](https://github.com/ethereum-optimism/optimism/blob/e374443006d757d93330b7d5263bc90b20032faa/op-node/rollup/derive/batch_queue.go#L116)于L2 safe head，则认为无效。
 6. `AttributesQueue`将`Batch`[补齐](https://github.com/ethereum-optimism/optimism/blob/4656d49ac32e7cfecb3fb29e79e39f641defa198/op-node/rollup/derive/attributes_queue.go#L72)成完整的`AttributesWithParent`。
    1. `Batch`只包括L2交易信息，不包括L1 deposit tx。
