@@ -15,6 +15,7 @@ Luckily, [@Qi](https://x.com/qc_qizhou) found an off-the-shelf local L1 devnet m
 2. `make devnet-up`
    1. This will create a devnet for L1 and L2;
    2. If it fails, run `sed -i "s#ARG KONA_VERSION=none#ARG KONA_VERSION=kona-client-v0.1.0-beta.5#" ops/docker/op-stack-go/Dockerfile`;
+   3. If it still fails with error "failed to authorize", run `BUILDKIT_NO_CLIENT_TOKEN=1 make devnet-up` instead;
 3. `make devnet-down`
    1. This will stop the L1&L2 network;
 4. `docker compose up -d l1 l1-bn l1-vc` under `ops-bedrock` folder.
